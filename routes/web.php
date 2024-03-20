@@ -7,7 +7,6 @@ use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\admin\AdminApiController;
 use App\Http\Controllers\pages\UsersListPage; // Import the UsersController if not already imported
-use Illuminate\Support\Facades\Auth; // Импортируем класс Auth
 
 /*
 |--------------------------------------------------------------------------
@@ -21,13 +20,7 @@ use Illuminate\Support\Facades\Auth; // Импортируем класс Auth
 */
 
 // Main Page Route
-Route::get('/', function () {
-  if (Auth::check()) {
-    return redirect()->route('user.index');
-  } else {
-    return redirect()->route('auth-login-basic');
-  }
-});
+Route::get('/', [UsersListPage::class, 'index'])->name('user.index');
 
 // locale
 Route::get('lang/{locale}', [LanguageController::class, 'swap']);

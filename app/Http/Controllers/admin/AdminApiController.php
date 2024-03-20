@@ -45,6 +45,7 @@ class AdminApiController extends Controller
         'user_id' => $data['user']['id'],
         'user_group' => $data['user']['group'],
         'user_login' => $data['user']['login'],
+        'authenticated' => true
       ]);
 
       return redirect('/');

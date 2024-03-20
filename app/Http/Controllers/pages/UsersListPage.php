@@ -10,6 +10,9 @@ class UsersListPage extends Controller
 {
   public function index(Request $request)
   {
+    if (!session('authenticated')) {
+      return redirect()->route('auth-login-basic');
+    }
 
     $columns = [
       [
