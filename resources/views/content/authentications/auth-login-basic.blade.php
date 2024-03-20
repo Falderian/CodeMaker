@@ -8,27 +8,27 @@ $customizerHidden = 'customizer-hide';
 
 @section('vendor-style')
 @vite([
-'resources/assets/vendor/libs/@form-validation/form-validation.scss'
+  'resources/assets/vendor/libs/@form-validation/form-validation.scss'
 ])
 @endsection
 
 @section('page-style')
 @vite([
-'resources/assets/vendor/scss/pages/page-auth.scss'
+  'resources/assets/vendor/scss/pages/page-auth.scss'
 ])
 @endsection
 
 @section('vendor-script')
 @vite([
-'resources/assets/vendor/libs/@form-validation/popular.js',
-'resources/assets/vendor/libs/@form-validation/bootstrap5.js',
-'resources/assets/vendor/libs/@form-validation/auto-focus.js'
+  'resources/assets/vendor/libs/@form-validation/popular.js',
+  'resources/assets/vendor/libs/@form-validation/bootstrap5.js',
+  'resources/assets/vendor/libs/@form-validation/auto-focus.js'
 ])
 @endsection
 
 @section('page-script')
 @vite([
-'resources/assets/js/pages-auth.js'
+  'resources/assets/js/pages-auth.js'
 ])
 @endsection
 
@@ -54,9 +54,27 @@ $customizerHidden = 'customizer-hide';
           <form id="formAuthentication" class="mb-3" action="{{ route('admin.login') }}" method="POST">
             @csrf
             <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3">
               <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
             </div>
+            @if ($errors->any())
+            <div class="alert-danger">
+              <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+            @endif
           </form>
+
         </div>
       </div>
       <!-- /Register -->

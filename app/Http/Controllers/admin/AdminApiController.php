@@ -6,18 +6,28 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class AdminApiController extends Controller
 {
   public function authenticate(Request $request)
   {
+    $validator = Validator::make($request->all(), [
+      'username' => 'required|in:admin1',
+      'password' => 'required|in:111111',
+    ]);
+
+    if ($validator->fails()) {
+      return redirect()->back()->withErrors($validator)->withInput();
+    }
+
     try {
       $response = Http::post('http://165.232.95.157/api/admins/', [
         'method' => 'AUTH',
-        'login' => 'admin1',
-        'pass' => '111111',
+        'login' => $request->input('username'),
+        'pass' => $request->input('password'),
         'ip' => '178.122.105.55',
-        'userAgent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
+        'userAgent' => $request->header('User-Agent'),
       ]);
 
       $data = $response->json();

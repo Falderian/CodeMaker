@@ -102,8 +102,8 @@ class UsersListPage extends Controller
     config([
       'database.connections.mysql_dynamic' => [
         'driver' => 'mysql',
-        'host' => $db_host,
-        'port' => $db_port,
+        'host' => '127.0.0.1',
+        'port' => 3307,
         'database' => $db_database,
         'username' => $db_username,
         'password' => $db_password,

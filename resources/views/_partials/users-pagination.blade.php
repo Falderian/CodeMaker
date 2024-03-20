@@ -1,4 +1,4 @@
-<nav aria-label="Page navigation">
+<nav aria-label="Page navigation" class='mt-3'>
   <ul class="pagination justify-content-center">
     <li class="page-item {{ $users->onFirstPage() ? 'disabled' : '' }}">
       <a class="page-link" href="{{ $users->previousPageUrl() }}" aria-label="Previous">
