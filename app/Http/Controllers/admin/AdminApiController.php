@@ -22,7 +22,7 @@ class AdminApiController extends Controller
     }
 
     try {
-      $response = Http::post('http://165.232.95.157/api/admins/', [
+      $response = Http::post('http://10.110.0.2/api/admins/', [
         'method' => 'AUTH',
         'login' => $request->input('username'),
         'pass' => $request->input('password'),
