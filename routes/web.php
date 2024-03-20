@@ -20,15 +20,10 @@ use App\Http\Controllers\pages\UsersListPage; // Import the UsersController if n
 */
 
 // Main Page Route
-Route::get('/', [HomePage::class, 'index'])->name('pages-home');
-Route::get('/users', [UsersListPage::class, 'index'])->name('user.index');
-Route::get('/users/{id}', [UserPage::class, 'show'])->name('user.show');
+Route::get('/', [UsersListPage::class, 'index'])->name('user.index');
 
 // locale
 Route::get('lang/{locale}', [LanguageController::class, 'swap']);
-
-// pages
-Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 
 // authentication
 Route::get('/auth/login-basic', [LoginBasic::class, 'index'])->name('auth-login-basic');

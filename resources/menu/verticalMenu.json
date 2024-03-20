@@ -2,28 +2,15 @@
   "menu": [
     {
       "url": "/",
-      "name": "Home",
-      "icon": "menu-icon tf-icons ti ti-smart-home",
-      "slug": "pages-home"
-    },
-    {
-      "url": "pages/misc-error",
-      "name": "Error",
-      "icon": "menu-icon tf-icons ti ti-alert-triangle",
-      "slug": "pages-misc-error",
-      "target": "_blank"
+      "name": "Users",
+      "icon": "menu-icon tf-icons ti ti-user",
+      "slug": "user.index"
     },
     {
       "url": "auth/login-basic",
       "name": "Login",
       "icon": "menu-icon tf-icons ti ti-login",
       "slug": "auth-login-basic"
-    },
-    {
-      "url": "users",
-      "name": "Users",
-      "icon": "menu-icon tf-icons ti ti-user",
-      "slug": "users"
     }
   ]
 }

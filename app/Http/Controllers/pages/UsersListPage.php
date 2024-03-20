@@ -10,6 +10,89 @@ class UsersListPage extends Controller
 {
   public function index(Request $request)
   {
+
+    $columns = [
+      [
+        'name' => 'ID',
+        'sortBy' => 'id',
+      ],
+      [
+        'name' => 'Login',
+        'sortBy' => 'login',
+      ],
+      [
+        'name' => 'Group',
+        'sortBy' => 'group',
+      ],
+      [
+        'name' => 'Status',
+        'sortBy' => 'status',
+      ],
+      [
+        'name' => 'Currency',
+        'sortBy' => 'currency',
+      ],
+      [
+        'name' => 'Balance',
+        'sortBy' => 'balance',
+      ],
+      [
+        'name' => 'Bonus Balance',
+        'sortBy' => 'bonus_balance',
+      ],
+      [
+        'name' => 'Registration Date',
+        'sortBy' => 'date_reg',
+      ],
+    ];
+
+    $db = $this->getConnection();
+
+    $groups = $request->input('groups', []);
+    $statuses = $request->input('statuses', []);
+    $selectedCurrencies = $request->input('currencies', []);
+
+    $this->storeSessionParameters($request, $groups, $statuses, $selectedCurrencies);
+
+    $sortBy = session('sortBy', 'id');
+    $sortOrder = session('sortOrder', 'desc');
+
+    $query = $this->buildQuery($db, $groups, $statuses, $selectedCurrencies, $sortBy, $sortOrder);
+
+    $users = $query->paginate(10)->appends([
+      'groups' => $groups,
+      'statuses' => $statuses,
+      'currencies' => $selectedCurrencies,
+      'sortBy' => $sortBy,
+      'sortOrder' => $sortOrder,
+    ]);
+
+    $currencyOptions = $this->getCurrencyOptions($db);
+    $groupOptions = $this->getGroupOptions();
+    $statusOptions = $this->getStatusOptions();
+
+    $hasResults = $users->isNotEmpty();
+
+    return view(
+      'content.pages.pages-userslistpage',
+      compact(
+        'users',
+        'groups',
+        'statuses',
+        'groupOptions',
+        'statusOptions',
+        'currencyOptions',
+        'sortBy',
+        'sortOrder',
+        'selectedCurrencies',
+        'hasResults',
+        'columns',
+      )
+    );
+  }
+
+  private function getConnection()
+  {
     $db_host = session('db_host');
     $db_port = session('db_port');
     $db_username = session('db_username');
@@ -19,22 +102,30 @@ class UsersListPage extends Controller
     config([
       'database.connections.mysql_dynamic' => [
         'driver' => 'mysql',
-        'host' => '127.0.0.1',
-        'port' => 3307,
+        'host' => $db_host,
+        'port' => $db_port,
         'database' => $db_database,
         'username' => $db_username,
         'password' => $db_password,
       ]
     ]);
 
-    $db = DB::connection('mysql_dynamic');
-    $groups = $request->input('groups', []);
-    $statuses = $request->input('statuses', []);
-    $selectedCurrencies = $request->input('currencies', []);
+    return DB::connection('mysql_dynamic');
+  }
 
-    $sortBy = $request->input('sortBy', 'id');
-    $sortOrder = $request->input('sortOrder', 'desc');
+  private function storeSessionParameters($request, $groups, $statuses, $selectedCurrencies)
+  {
+    session([
+      'groups' => $groups,
+      'statuses' => $statuses,
+      'selectedCurrencies' => $selectedCurrencies,
+      'sortBy' => $request->input('sortBy', 'id'),
+      'sortOrder' => $request->input('sortOrder', 'desc'),
+    ]);
+  }
 
+  private function buildQuery($db, $groups, $statuses, $selectedCurrencies, $sortBy, $sortOrder)
+  {
     $query = $db->table('users');
 
     if (!empty ($groups)) {
@@ -49,42 +140,33 @@ class UsersListPage extends Controller
 
     $query->orderBy($sortBy, $sortOrder);
 
-    $users = $query->paginate(10)->appends(request()->query());
+    return $query;
+  }
 
+  private function getCurrencyOptions($db)
+  {
     $currencyOptionsJson = $db->table('settings')->where('id', 'currencies')->value('value');
-    $currencyOptions = json_decode($currencyOptionsJson);
+    return json_decode($currencyOptionsJson) ?? [];
+  }
 
-    if ($currencyOptions === null) {
-      $currencyOptions = [];
-    }
-
-    $groupOptions = [
+  private function getGroupOptions()
+  {
+    return [
       0 => 'Guest',
       1 => 'Player',
       2 => 'Admin',
       3 => 'Supervisor',
       4 => 'TestPlayer',
     ];
+  }
 
-    $statusOptions = [
+  private function getStatusOptions()
+  {
+    return [
       0 => 'Inactive',
       1 => 'Active',
       2 => 'Blocked',
       3 => 'Deleted',
     ];
-
-    $selectedCurrencies = $request->input('currencies', []);
-
-    return view('content.pages.pages-userslistpage', [
-      'users' => $users,
-      'groups' => $groups,
-      'statuses' => $statuses,
-      'groupOptions' => $groupOptions,
-      'statusOptions' => $statusOptions,
-      'currencyOptions' => $currencyOptions,
-      'sortBy' => $sortBy,
-      'sortOrder' => $sortOrder,
-      'selectedCurrencies' => $selectedCurrencies,
-    ]);
   }
 }

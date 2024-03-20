@@ -37,7 +37,7 @@ class AdminApiController extends Controller
         'user_login' => $data['user']['login'],
       ]);
 
-      return view('content.pages.pages-home');
+      return redirect('/');
     } catch (\Exception $e) {
       return response()->json(['error' => $e->getMessage()], 500);
     }
