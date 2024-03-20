@@ -27,4 +27,4 @@ yarn-error.log
 /public/css
 /public/js
 
-creds.txt
+/creds.txt
